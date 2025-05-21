@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "https://bnf.kaiten.ru",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": "/api/latest"
+    }
+  }
+} 

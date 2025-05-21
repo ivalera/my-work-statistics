@@ -1,0 +1,17 @@
+<div class="login-container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <h2>Вход в Kaiten</h2>
+    <div class="form-group">
+      <label for="apiKey">API Ключ</label>
+      <input
+        type="password"
+        id="apiKey"
+        formControlName="apiKey"
+        class="form-control"
+        placeholder="Введите ваш API ключ"
+      />
+    </div>
+    <button type="submit" [disabled]="!loginForm.valid">Войти</button>
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+  </form>
+</div> 
