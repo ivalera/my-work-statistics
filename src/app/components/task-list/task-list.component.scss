@@ -92,6 +92,21 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     overflow-x: hidden;
     touch-action: pan-y pinch-zoom;
+    height: 100%;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 3px;
+    }
 
     .board-card {
       background: white;
@@ -126,7 +141,6 @@
         touch-action: pan-x pan-y pinch-zoom;
         user-select: none;
         overscroll-behavior-x: contain;
-        -webkit-overflow-scrolling: touch;
 
         &::-webkit-scrollbar {
           height: 6px;
