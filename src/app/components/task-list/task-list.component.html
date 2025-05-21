@@ -1,72 +1,93 @@
 <div class="task-container">
+  <p-toast position="top-right"></p-toast>
+  
   <div class="header">
     <h2>Доски и задачи</h2>
     <div class="controls">
       <div class="input-group">
         <div class="space-input">
-          <input
-            type="number"
-            [(ngModel)]="spaceId"
-            placeholder="Введите ID пространства"
-            (keyup.enter)="loadBoards()"
-          />
+          <span class="p-input-icon-right">
+            <i class="pi pi-hashtag"></i>
+            <input
+              pInputText
+              type="number"
+              [(ngModel)]="spaceId"
+              placeholder="Введите ID пространства"
+              (keyup.enter)="loadBoards()"
+            />
+          </span>
         </div>
         <div class="username-input">
-          <input
-            type="text"
-            [(ngModel)]="username"
-            placeholder="Введите имя пользователя"
-            (keyup.enter)="loadBoards()"
-          />
+          <span class="p-input-icon-right">
+            <i class="pi pi-user"></i>
+            <input
+              pInputText
+              type="text"
+              [(ngModel)]="username"
+              placeholder="Введите имя пользователя"
+              (keyup.enter)="loadBoards()"
+            />
+          </span>
         </div>
-        <button (click)="loadBoards()">Загрузить доски</button>
+        <p-button label="Загрузить доски" icon="pi pi-refresh" (onClick)="loadBoards()"></p-button>
       </div>
-      <button (click)="logout()" class="logout-btn">Выйти</button>
+      <p-button label="Выйти" icon="pi pi-sign-out" severity="danger" (onClick)="logout()"></p-button>
     </div>
+    
     <div class="total-hours" *ngIf="totalHours > 0">
       <span class="label">Всего часов в колонке "Готово":</span>
       <span class="value">{{ totalHours }}h</span>
     </div>
+    
     <div class="controls-row">
       <div class="sort-controls">
-        <button class="sort-btn" (click)="toggleSortOrder()">
-          {{ isAscending ? 'По возрастанию' : 'По убыванию' }}
-          <i class="fas" [ngClass]="isAscending ? 'fa-sort-up' : 'fa-sort-down'"></i>
-        </button>
+        <p-button
+          [label]="isAscending ? 'По возрастанию' : 'По убыванию'"
+          [icon]="isAscending ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down'"
+          (onClick)="toggleSortOrder()"
+        ></p-button>
       </div>
       <div class="export-controls">
-        <button class="export-btn" (click)="exportToExcel()">
-          Экспорт в Excel
-          <i class="fas fa-file-excel"></i>
-        </button>
+        <p-button
+          label="Экспорт в Excel"
+          icon="pi pi-file-excel"
+          severity="success"
+          (onClick)="exportToExcel()"
+        ></p-button>
       </div>
     </div>
   </div>
   
   <div class="boards-list">
-    <div *ngIf="loading" class="loading">Загрузка...</div>
-    <div *ngIf="error" class="error">{{ error }}</div>
+    <div *ngIf="loading" class="loading-overlay">
+      <span class="loading-text">Загрузка данных...</span>
+    </div>
     
     <div *ngFor="let board of boards" class="board-card">
-      <h3>{{ board.title }}</h3>
-      
-      <div class="columns-container">
-        <div *ngFor="let column of getSortedColumns(board.columns)" class="column">
-          <div class="column-header">
-            <h4 class="column-title">{{ column.title }}</h4>
+      <p-card>
+        <ng-template pTemplate="header">
+          <div class="board-header">
+            <h3 class="board-title">{{ board.title }}</h3>
           </div>
-          
-          <div class="column-cards">
-            <div *ngIf="!getColumnCards(board.id, column.id)?.length" class="no-cards">
-              Нет задач
+        </ng-template>
+        <div class="columns-container">
+          <div *ngFor="let column of getSortedColumns(board.columns)" class="column">
+            <div class="column-header">
+              <h4 class="column-title">{{ column.title }}</h4>
             </div>
-            <app-task-card
-              *ngFor="let card of getColumnCards(board.id, column.id)"
-              [card]="card"
-            ></app-task-card>
+            
+            <div class="column-cards">
+              <div *ngIf="!getColumnCards(board.id, column.id)?.length" class="no-cards">
+                Нет задач
+              </div>
+              <app-task-card
+                *ngFor="let card of getColumnCards(board.id, column.id)"
+                [card]="card"
+              ></app-task-card>
+            </div>
           </div>
         </div>
-      </div>
+      </p-card>
     </div>
   </div>
 </div> 
