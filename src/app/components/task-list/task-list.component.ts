@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KaitenService, Board, Card, Column } from '../../services/kaiten.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
@@ -9,6 +10,7 @@ import * as XLSX from 'xlsx';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
 import { InputIconModule } from 'primeng/inputicon';
+
 
 @Component({
   selector: 'app-task-list',
@@ -24,6 +26,7 @@ import { InputIconModule } from 'primeng/inputicon';
   styleUrls: ['./task-list.component.scss']
 })
 export class TaskListComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
   boards: Board[] = [];
   boardCards: { [key: number]: Card[] } = {};
   loading: boolean = false;
@@ -176,49 +179,53 @@ export class TaskListComponent implements OnInit {
     this.boards = [];
     this.boardCards = {};
 
-    this.kaitenService.getBoards(this.spaceId).subscribe({
-      next: (boards) => {
-        this.boards = boards;
-        // Загружаем задачи для каждой доски
-        boards.forEach(board => {
-          this.loadBoardCards(board.id);
-        });
-        this.loading = false;
-        this.saveLastUsedValues();
-      },
-      error: (error) => {
-        if (error.status === 401 || error.status === 403) {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Ошибка авторизации',
-            detail: 'Неверный API ключ',
-            life: 3000
+    this.kaitenService.getBoards(this.spaceId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (boards) => {
+          this.boards = boards;
+          // Загружаем задачи для каждой доски
+          boards.forEach(board => {
+            this.loadBoardCards(board.id);
           });
-          this.router.navigate(['/login']);
-        } else {
-          this.error = 'Ошибка при загрузке досок';
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Ошибка',
-            detail: this.error,
-            life: 3000
-          });
+          this.loading = false;
+          this.saveLastUsedValues();
+        },
+        error: (error) => {
+          if (error.status === 401 || error.status === 403) {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Ошибка авторизации',
+              detail: 'Неверный API ключ',
+              life: 3000
+            });
+            this.router.navigate(['/login']);
+          } else {
+            this.error = 'Ошибка при загрузке досок';
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Ошибка',
+              detail: this.error,
+              life: 3000
+            });
+          }
         }
-      }
-    });
+      });
   }
 
   loadBoardCards(boardId: number) {
-    this.kaitenService.getBoardCards(this.spaceId, boardId, this.username).subscribe({
-      next: (cards) => {
-        this.boardCards[boardId] = cards;
-        this.calculateTotalHours(); // Пересчитываем часы после загрузки карточек
-      },
-      error: (err) => {
-        console.error(`Error loading cards for board ${boardId}:`, err);
-        this.boardCards[boardId] = [];
-      }
-    });
+    this.kaitenService.getBoardCards(this.spaceId, boardId, this.username)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (cards) => {
+            this.boardCards[boardId] = cards;
+            this.calculateTotalHours(); // Пересчитываем часы после загрузки карточек
+        },
+        error: (err) => {
+          console.error(`Error loading cards for board ${boardId}:`, err);
+          this.boardCards[boardId] = [];
+        }
+      });
   }
 
   logout() {
