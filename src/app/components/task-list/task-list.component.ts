@@ -6,11 +6,23 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import * as XLSX from 'xlsx';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, TaskCardComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TaskCardComponent,
+    InputTextModule,
+    ToastModule,
+    InputIconModule
+  ],
+  providers: [MessageService],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss']
 })
@@ -32,7 +44,8 @@ export class TaskListComponent implements OnInit {
   constructor(
     private kaitenService: KaitenService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -116,22 +129,19 @@ export class TaskListComponent implements OnInit {
   }
 
   loadBoards() {
-    if (!this.spaceId) {
-      this.error = 'Пожалуйста, введите ID пространства';
+    if (!this.spaceId || !this.username) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Ошибка',
+        detail: 'Пожалуйста, введите ID пространства и имя пользователя'
+      });
       return;
     }
 
-    if (!this.username) {
-      this.error = 'Пожалуйста, введите имя пользователя';
-      return;
-    }
-
-    this.saveLastUsedValues();
     this.loading = true;
     this.error = '';
     this.boards = [];
     this.boardCards = {};
-    this.totalHours = 0;
 
     this.kaitenService.getBoards(this.spaceId).subscribe({
       next: (boards) => {
@@ -141,11 +151,16 @@ export class TaskListComponent implements OnInit {
           this.loadBoardCards(board.id);
         });
         this.loading = false;
+        this.saveLastUsedValues();
       },
-      error: (err) => {
-        this.error = 'Ошибка при загрузке досок';
+      error: (error) => {
         this.loading = false;
-        console.error('Error loading boards:', err);
+        this.error = error.message;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Ошибка загрузки',
+          detail: error.message
+        });
       }
     });
   }

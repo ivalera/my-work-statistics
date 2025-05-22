@@ -1,55 +1,73 @@
 <div class="task-container">
+  <p-toast position="top-right"></p-toast>
+  
   <div class="header">
     <h2>Доски и задачи</h2>
     <div class="controls">
       <div class="input-group">
         <div class="space-input">
-          <input
-            type="number"
-            [(ngModel)]="spaceId"
-            placeholder="Введите ID пространства"
-            (keyup.enter)="loadBoards()"
-          />
+          <div class="input-wrapper">
+            <i class="pi pi-hashtag"></i>
+            <input
+              type="number"
+              [(ngModel)]="spaceId"
+              placeholder="Введите ID пространства"
+              (keyup.enter)="loadBoards()"
+            />
+          </div>
         </div>
         <div class="username-input">
-          <input
-            type="text"
-            [(ngModel)]="username"
-            placeholder="Введите имя пользователя"
-            (keyup.enter)="loadBoards()"
-          />
+          <div class="input-wrapper">
+            <i class="pi pi-user"></i>
+            <input
+              type="text"
+              [(ngModel)]="username"
+              placeholder="Введите имя пользователя"
+              (keyup.enter)="loadBoards()"
+            />
+          </div>
         </div>
-        <button (click)="loadBoards()">Загрузить доски</button>
+        <button class="btn btn-primary" (click)="loadBoards()">
+          <i class="pi pi-refresh"></i>
+          Загрузить доски
+        </button>
       </div>
-      <button (click)="logout()" class="logout-btn">Выйти</button>
+      <button class="btn btn-danger" (click)="logout()">
+        <i class="pi pi-sign-out"></i>
+        Выйти
+      </button>
     </div>
+    
     <div class="total-hours" *ngIf="totalHours > 0">
       <span class="label">Всего часов в колонке "Готово":</span>
       <span class="value">{{ totalHours }}h</span>
     </div>
+    
     <div class="controls-row">
       <div class="sort-controls">
-        <button class="sort-btn" (click)="toggleSortOrder()">
+        <button class="btn btn-secondary" (click)="toggleSortOrder()">
+          <i [class]="isAscending ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down'"></i>
           {{ isAscending ? 'По возрастанию' : 'По убыванию' }}
-          <i class="fas" [ngClass]="isAscending ? 'fa-sort-up' : 'fa-sort-down'"></i>
         </button>
       </div>
       <div class="export-controls">
-        <button class="export-btn" (click)="exportToExcel()">
+        <button class="btn btn-success" (click)="exportToExcel()">
+          <i class="pi pi-file-excel"></i>
           Экспорт в Excel
-          <i class="fas fa-file-excel"></i>
         </button>
       </div>
     </div>
   </div>
   
   <div class="boards-list">
-    <div *ngIf="loading" class="loading">Загрузка...</div>
-    <div *ngIf="error" class="error">{{ error }}</div>
+    <div *ngIf="loading" class="loading-overlay">
+      <span class="loading-text">Загрузка данных...</span>
+    </div>
     
     <div *ngFor="let board of boards" class="board-card">
-      <h3>{{ board.title }}</h3>
-      
+      <div class="board-header">
+        <h3 class="board-title">{{ board.title }}</h3>
+      </div>
       <div class="columns-container">
         <div *ngFor="let column of getSortedColumns(board.columns)" class="column">
           <div class="column-header">
