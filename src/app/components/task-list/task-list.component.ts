@@ -33,8 +33,16 @@ export class TaskListComponent implements OnInit {
   error: string = '';
   spaceId: number = 569884;
   username: string = 'ivalera_dev';
-  totalHours: number = 0;
-  private readonly DONE_COLUMN_ID = 4714326;
+  totalHours: { [key: string]: number } = {
+    done: 0,
+    inProgress: 0,
+    estimated: 0
+  };
+  private readonly COLUMN_IDS = {
+    DONE: 4714326,
+    IN_PROGRESS: 4530950,
+    ESTIMATED: 4643627
+  };
   private readonly STORAGE_KEYS = {
     SPACE_ID: 'lastSpaceId',
     USERNAME: 'lastUsername'
@@ -89,7 +97,7 @@ export class TaskListComponent implements OnInit {
     const doneCards: { title: string; hours: string }[] = [];
     
     this.boards.forEach(board => {
-      const cards = this.getColumnCards(board.id, this.DONE_COLUMN_ID);
+      const cards = this.getColumnCards(board.id, this.COLUMN_IDS.DONE);
       cards.forEach(card => {
         doneCards.push({
           title: card.title,
@@ -114,14 +122,42 @@ export class TaskListComponent implements OnInit {
   }
 
   calculateTotalHours(): void {
-    this.totalHours = 0;
+    this.totalHours = {
+      done: 0,
+      inProgress: 0,
+      estimated: 0
+    };
+
     this.boards.forEach(board => {
-      const doneCards = this.getColumnCards(board.id, this.DONE_COLUMN_ID);
+      // Подсчет часов для колонки "Готово"
+      const doneCards = this.getColumnCards(board.id, this.COLUMN_IDS.DONE);
       doneCards.forEach(card => {
         if (card.properties?.id_411710) {
           const hours = parseFloat(card.properties.id_411710.replace('h', ''));
           if (!isNaN(hours)) {
-            this.totalHours += hours;
+            this.totalHours['done'] += hours;
+          }
+        }
+      });
+
+      // Подсчет часов для колонки "В работе"
+      const inProgressCards = this.getColumnCards(board.id, this.COLUMN_IDS.IN_PROGRESS);
+      inProgressCards.forEach(card => {
+        if (card.properties?.id_411710) {
+          const hours = parseFloat(card.properties.id_411710.replace('h', ''));
+          if (!isNaN(hours)) {
+            this.totalHours['inProgress'] += hours;
+          }
+        }
+      });
+
+      // Подсчет часов для колонки "Оценка задач"
+      const estimatedCards = this.getColumnCards(board.id, this.COLUMN_IDS.ESTIMATED);
+      estimatedCards.forEach(card => {
+        if (card.properties?.id_411710) {
+          const hours = parseFloat(card.properties.id_411710.replace('h', ''));
+          if (!isNaN(hours)) {
+            this.totalHours['estimated'] += hours;
           }
         }
       });

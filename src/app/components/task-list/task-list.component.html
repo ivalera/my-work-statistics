@@ -38,9 +38,19 @@
       </button>
     </div>
     
-    <div class="total-hours" *ngIf="totalHours > 0">
-      <span class="label">Всего часов в колонке "Готово":</span>
-      <span class="value">{{ totalHours }}h</span>
+    <div class="total-hours" *ngIf="totalHours['done'] > 0 || totalHours['inProgress'] > 0 || totalHours['estimated'] > 0">
+      <div class="hours-item">
+        <span class="label">Часы в колонке "В работе":</span>
+        <span class="value">{{ totalHours['inProgress'] }}h</span>
+      </div>
+      <div class="hours-item">
+        <span class="label">Часы в колонке "Оценка задач":</span>
+        <span class="value">{{ totalHours['estimated'] }}h</span>
+      </div>
+      <div class="hours-item">
+        <span class="label">Часы в колонке "Готово":</span>
+        <span class="value">{{ totalHours['done'] }}h</span>
+      </div>
     </div>
     
     <div class="controls-row">

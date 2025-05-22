@@ -99,16 +99,26 @@
       border-radius: 6px;
       margin-bottom: 1rem;
       display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: 0.5rem;
 
-      .label {
-        color: #333;
-      }
+      .hours-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background-color: white;
+        border-radius: 4px;
 
-      .value {
-        font-weight: bold;
-        color: #2196F3
+        .label {
+          color: #333;
+          font-weight: 600;
+        }
+
+        .value {
+          font-weight: bold;
+          color: #2196F3;
+        }
       }
     }
 
