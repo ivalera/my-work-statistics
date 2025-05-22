@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 
 export interface Board {
@@ -76,7 +76,14 @@ export class KaitenService {
   getBoards(spaceId: number): Observable<Board[]> {
     return this.http.get<Board[]>(`${this.apiUrl}/spaces/${spaceId}/boards`, {
       headers: this.getHeaders()
-    });
+    }).pipe(
+      catchError(error => {
+        if (error.status === 401 || error.status === 403) {
+          this.authService.logout();
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
   getBoardCards(spaceId: number, boardId: number, username?: string): Observable<Card[]> {
@@ -92,6 +99,12 @@ export class KaitenService {
           );
         }
         return cards;
+      }),
+      catchError(error => {
+        if (error.status === 401 || error.status === 403) {
+          this.authService.logout();
+        }
+        return throwError(() => error);
       })
     );
   }

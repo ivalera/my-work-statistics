@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -7,8 +9,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AuthService {
   private apiKeyStorageKey = 'kaiten_api_key';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private apiUrl = '/api';
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.isAuthenticatedSubject.next(!!this.getApiKey());
   }
 

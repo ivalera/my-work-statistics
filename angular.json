@@ -68,18 +68,25 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "port": 3000
+          },
           "configurations": {
             "production": {
               "buildTarget": "my-work-statistics:build:production"
             },
             "development": {
-              "buildTarget": "my-work-statistics:build:development"
+              "buildTarget": "my-work-statistics:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n"
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "my-work-statistics:build"
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",

@@ -4,7 +4,8 @@
     "secure": true,
     "changeOrigin": true,
     "pathRewrite": {
-      "^/api": "/api/latest"
-    }
+      "^/api": "/api/v1"
+    },
+    "logLevel": "debug"
   }
 } 

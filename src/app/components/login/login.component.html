@@ -14,7 +14,9 @@
         placeholder="Введите ваш API ключ"
       />
     </div>
-    <button type="submit" [disabled]="!loginForm.valid">Войти</button>
-    <div *ngIf="error" class="error-message">{{ error }}</div>
+    <button type="submit" [disabled]="!loginForm.valid || loading">
+      <i *ngIf="loading" class="pi pi-spin pi-spinner"></i>
+      <span *ngIf="!loading">Войти</span>
+    </button>
   </form>
 </div> 

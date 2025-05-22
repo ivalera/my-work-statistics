@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import * as XLSX from 'xlsx';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { InputIconModule } from 'primeng/inputicon';
 
@@ -19,10 +18,8 @@ import { InputIconModule } from 'primeng/inputicon';
     FormsModule,
     TaskCardComponent,
     InputTextModule,
-    ToastModule,
     InputIconModule
   ],
-  providers: [MessageService],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss']
 })
@@ -190,13 +187,23 @@ export class TaskListComponent implements OnInit {
         this.saveLastUsedValues();
       },
       error: (error) => {
-        this.loading = false;
-        this.error = error.message;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Ошибка загрузки',
-          detail: error.message
-        });
+        if (error.status === 401 || error.status === 403) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Ошибка авторизации',
+            detail: 'Неверный API ключ',
+            life: 3000
+          });
+          this.router.navigate(['/login']);
+        } else {
+          this.error = 'Ошибка при загрузке досок';
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Ошибка',
+            detail: this.error,
+            life: 3000
+          });
+        }
       }
     });
   }
