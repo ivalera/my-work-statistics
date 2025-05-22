@@ -10,21 +10,6 @@
       </button>
     </div>
     <div class="header-content">
-      <div class="total-hours" *ngIf="totalHours['done'] > 0 || totalHours['inProgress'] > 0 || totalHours['estimated'] > 0">
-        <h3 class="hours-title">Часы в колонках</h3>
-        <div class="hours-item">
-          <span class="label">В работе:</span>
-          <span class="value">{{ totalHours['inProgress'] }}h</span>
-        </div>
-        <div class="hours-item">
-          <span class="label">Оценка задач:</span>
-          <span class="value">{{ totalHours['estimated'] }}h</span>
-        </div>
-        <div class="hours-item">
-          <span class="label">Готово:</span>
-          <span class="value">{{ totalHours['done'] }}h</span>
-        </div>
-      </div>
       <div class="controls">
         <div class="input-group">
           <div class="space-input">
@@ -55,6 +40,21 @@
           <i class="pi pi-refresh"></i>
           Загрузить доски
         </button>
+      </div>
+      <div class="total-hours" *ngIf="totalHours['done'] > 0 || totalHours['inProgress'] > 0 || totalHours['estimated'] > 0">
+        <h3 class="hours-title">Часы в колонках</h3>
+        <div class="hours-item">
+          <span class="label">В работе:</span>
+          <span class="value">{{ totalHours['inProgress'] }}h</span>
+        </div>
+        <div class="hours-item">
+          <span class="label">Оценка задач:</span>
+          <span class="value">{{ totalHours['estimated'] }}h</span>
+        </div>
+        <div class="hours-item">
+          <span class="label">Готово:</span>
+          <span class="value">{{ totalHours['done'] }}h</span>
+        </div>
       </div>
     </div>
   </div>
