@@ -6,32 +6,36 @@
     <div class="controls">
       <div class="input-group">
         <div class="space-input">
-          <span class="p-input-icon-right">
+          <div class="input-wrapper">
             <i class="pi pi-hashtag"></i>
             <input
-              pInputText
               type="number"
               [(ngModel)]="spaceId"
               placeholder="Введите ID пространства"
               (keyup.enter)="loadBoards()"
             />
-          </span>
+          </div>
         </div>
         <div class="username-input">
-          <span class="p-input-icon-right">
+          <div class="input-wrapper">
             <i class="pi pi-user"></i>
             <input
-              pInputText
               type="text"
               [(ngModel)]="username"
               placeholder="Введите имя пользователя"
               (keyup.enter)="loadBoards()"
             />
-          </span>
+          </div>
         </div>
-        <p-button label="Загрузить доски" icon="pi pi-refresh" (onClick)="loadBoards()"></p-button>
+        <button class="btn btn-primary" (click)="loadBoards()">
+          <i class="pi pi-refresh"></i>
+          Загрузить доски
+        </button>
       </div>
-      <p-button label="Выйти" icon="pi pi-sign-out" severity="danger" (onClick)="logout()"></p-button>
+      <button class="btn btn-danger" (click)="logout()">
+        <i class="pi pi-sign-out"></i>
+        Выйти
+      </button>
     </div>
     
     <div class="total-hours" *ngIf="totalHours > 0">
@@ -41,19 +45,16 @@
     
     <div class="controls-row">
       <div class="sort-controls">
-        <p-button
-          [label]="isAscending ? 'По возрастанию' : 'По убыванию'"
-          [icon]="isAscending ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down'"
-          (onClick)="toggleSortOrder()"
-        ></p-button>
+        <button class="btn btn-secondary" (click)="toggleSortOrder()">
+          <i [class]="isAscending ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down'"></i>
+          {{ isAscending ? 'По возрастанию' : 'По убыванию' }}
+        </button>
       </div>
       <div class="export-controls">
-        <p-button
-          label="Экспорт в Excel"
-          icon="pi pi-file-excel"
-          severity="success"
-          (onClick)="exportToExcel()"
-        ></p-button>
+        <button class="btn btn-success" (click)="exportToExcel()">
+          <i class="pi pi-file-excel"></i>
+          Экспорт в Excel
+        </button>
       </div>
     </div>
   </div>
@@ -64,30 +65,26 @@
     </div>
     
     <div *ngFor="let board of boards" class="board-card">
-      <p-card>
-        <ng-template pTemplate="header">
-          <div class="board-header">
-            <h3 class="board-title">{{ board.title }}</h3>
+      <div class="board-header">
+        <h3 class="board-title">{{ board.title }}</h3>
+      </div>
+      <div class="columns-container">
+        <div *ngFor="let column of getSortedColumns(board.columns)" class="column">
+          <div class="column-header">
+            <h4 class="column-title">{{ column.title }}</h4>
           </div>
-        </ng-template>
-        <div class="columns-container">
-          <div *ngFor="let column of getSortedColumns(board.columns)" class="column">
-            <div class="column-header">
-              <h4 class="column-title">{{ column.title }}</h4>
+          
+          <div class="column-cards">
+            <div *ngIf="!getColumnCards(board.id, column.id)?.length" class="no-cards">
+              Нет задач
             </div>
-            
-            <div class="column-cards">
-              <div *ngIf="!getColumnCards(board.id, column.id)?.length" class="no-cards">
-                Нет задач
-              </div>
-              <app-task-card
-                *ngFor="let card of getColumnCards(board.id, column.id)"
-                [card]="card"
-              ></app-task-card>
-            </div>
+            <app-task-card
+              *ngFor="let card of getColumnCards(board.id, column.id)"
+              [card]="card"
+            ></app-task-card>
           </div>
         </div>
-      </p-card>
+      </div>
     </div>
   </div>
 </div> 

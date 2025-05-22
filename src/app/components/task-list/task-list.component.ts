@@ -6,12 +6,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import * as XLSX from 'xlsx';
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { CardModule } from 'primeng/card';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-task-list',
@@ -20,11 +18,9 @@ import { CardModule } from 'primeng/card';
     CommonModule,
     FormsModule,
     TaskCardComponent,
-    ButtonModule,
     InputTextModule,
-    InputNumberModule,
     ToastModule,
-    CardModule
+    InputIconModule
   ],
   providers: [MessageService],
   templateUrl: './task-list.component.html',
