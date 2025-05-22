@@ -33,24 +33,36 @@
   }
 
   .header {
-
-    h2 {
-      margin: 0 0 1rem;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #333;
-    }
-
-    .controls {
+    .header-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1rem;
 
+      h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+      }
+    }
+
+    .header-content {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      
       .input-group {
         display: flex;
         gap: 1rem;
-        align-items: center;
+        flex-direction: column;
 
         .space-input,
         .username-input {
@@ -91,16 +103,29 @@
           }
         }
       }
+
+      .btn-load-boards {
+        align-self: start;
+        width: 100%;
+      }
     }
 
     .total-hours {
+      width: 320px;
       background-color: #e0e0e0;
       padding: 1rem;
       border-radius: 6px;
-      margin-bottom: 1rem;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+
+      .hours-title {
+        margin: 0 0 0.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+        text-align: left;
+      }
 
       .hours-item {
         display: flex;
@@ -121,11 +146,15 @@
         }
       }
     }
+  }
 
+  .sort-controls-export {
+    margin: 1rem 0;
+    
     .controls-row {
       display: flex;
+      flex-direction: row;
       justify-content: space-between;
-      margin-bottom: 1rem;
     }
   }
 
@@ -241,64 +270,58 @@
     border-radius: 4px;
     margin-bottom: 1rem;
   }
-}
 
-.loading {
-  text-align: center;
-  padding: 20px;
-  color: #666;
-}
-
-.error {
-  color: #dc3545;
-  padding: 12px;
-  background: #f8d7da;
-  border-radius: 4px;
-  margin-bottom: 16px;
-}
-
-.controls-row {
-  display: flex;
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.sort-controls,
-.export-controls {
-  display: flex;
-  align-items: center;
-}
-
-.sort-btn,
-.export-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  background-color: #f0f0f0;
-  color: #333;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-size: 14px;
-  white-space: nowrap;
-
-  &:hover {
-    background-color: #e0e0e0;
+  .loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
   }
 
-  i {
-    font-size: 16px;
+  .error {
+    color: #dc3545;
+    padding: 12px;
+    background: #f8d7da;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+
+  .sort-controls,
+  .export-controls {
+    display: flex;
+    align-items: center;
+  }
+
+  .sort-btn,
+  .export-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 14px;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+
+    i {
+      font-size: 16px;
+    }
+  }
+
+  .export-btn {
+    background-color: #217346;
+    color: white;
+
+    &:hover {
+      background-color: #1a5c38;
+    }
   }
 }
-
-.export-btn {
-  background-color: #217346;
-  color: white;
-
-  &:hover {
-    background-color: #1a5c38;
-  }
-} 

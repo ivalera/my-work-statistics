@@ -12,6 +12,9 @@
   
   .task-header {
     margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     
     .task-id {
       color: #6c757d;
